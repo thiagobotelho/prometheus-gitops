@@ -9,3 +9,4 @@ resources:
   - monitoringstack.yaml
   - prometheusrule.yaml
   - networkpolicy.yaml
+  - prometheus-exemplars.yaml

@@ -7,10 +7,6 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
-  enableFeatures:
-    - exemplar-storage
-  exemplars:
-    maxSize: 100000
   logLevel: info
   retention: 15d
   createClusterRoleBindings: CreateClusterRoleBindings

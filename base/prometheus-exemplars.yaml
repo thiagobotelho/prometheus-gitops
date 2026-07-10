@@ -1,0 +1,13 @@
+apiVersion: monitoring.rhobs/v1
+kind: Prometheus
+metadata:
+  name: apps-monitoring
+  namespace: observability-apps
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true,Validate=false
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  enableFeatures:
+    - exemplar-storage
+  exemplars:
+    maxSize: 100000
