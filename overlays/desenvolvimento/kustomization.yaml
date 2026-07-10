@@ -6,10 +6,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/name: prometheus-apps
       app.kubernetes.io/instance: prometheus-apps-desenvolvimento
       app.kubernetes.io/component: monitoring
-      app.kubernetes.io/part-of: observability
-      app.kubernetes.io/managed-by: argocd
       app.kubernetes.io/environment: desenvolvimento
     includeSelectors: false
