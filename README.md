@@ -75,6 +75,44 @@ oc -n observability-apps port-forward svc/apps-monitoring-prometheus 9090:9090
 curl -fsS 'http://127.0.0.1:9090/api/v1/query?query=up'
 ```
 
+## Exemplares
+
+No CRC atual, o Prometheus gerado pelo `MonitoringStack` sobe com
+`--enable-feature=exemplar-storage`, permitindo armazenar exemplares
+OpenMetrics com `trace_id` e `span_id`. Essa configuração deve ser validada no
+runtime, porque o campo não aparece diretamente no manifesto `MonitoringStack`
+versionado neste repositório.
+
+Valide a flag:
+
+```bash
+oc -n observability-apps exec prometheus-apps-monitoring-0 -c prometheus -- \
+  curl -fsS http://127.0.0.1:9090/api/v1/status/flags
+```
+
+O retorno esperado contém:
+
+```json
+{
+  "enable-feature": "exemplar-storage"
+}
+```
+
+Valide a existência de exemplares recentes:
+
+```bash
+START=$(($(date +%s)-3600))
+END=$(date +%s)
+
+oc -n observability-apps exec prometheus-apps-monitoring-0 -c prometheus -- \
+  curl -fsS "http://127.0.0.1:9090/api/v1/query_exemplars?query=%7B__name__%3D~%22.%2B%22%7D&start=${START}&end=${END}"
+```
+
+Quando a integração está funcionando, a resposta inclui séries com exemplares e
+labels como `trace_id` e `span_id`. O `grafana-gitops` configura o datasource
+`Prometheus-Apps` com `exemplarTraceIdDestinations` apontando para o datasource
+`tempo`, tornando os exemplares clicáveis no Grafana.
+
 ## Estrutura
 
 ```text
