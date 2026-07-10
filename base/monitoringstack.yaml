@@ -1,0 +1,51 @@
+apiVersion: monitoring.rhobs/v1alpha1
+kind: MonitoringStack
+metadata:
+  name: apps-monitoring
+  namespace: observability-apps
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  logLevel: info
+  retention: 15d
+  createClusterRoleBindings: CreateClusterRoleBindings
+  namespaceSelector:
+    matchLabels:
+      observability: enabled
+  resourceSelector:
+    matchLabels:
+      observability: platform
+  prometheusConfig:
+    replicas: 1
+    scrapeInterval: 30s
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 10Gi
+    thanosResources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+  alertmanagerConfig:
+    disabled: true
+    matcherStrategy:
+      type: None
+    replicas: 1
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

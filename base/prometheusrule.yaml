@@ -1,0 +1,24 @@
+apiVersion: monitoring.rhobs/v1
+kind: PrometheusRule
+metadata:
+  name: apps-monitoring-platform
+  namespace: observability-apps
+  labels:
+    observability: platform
+    app.kubernetes.io/name: prometheus-apps
+    app.kubernetes.io/part-of: observability
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  groups:
+    - name: apps-monitoring.self
+      rules:
+        - alert: ApplicationPrometheusTargetDown
+          expr: up == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Target do Prometheus de aplicações está down"
+            description: "O target {{ $labels.job }} em {{ $labels.namespace }}/{{ $labels.instance }} está indisponível."
