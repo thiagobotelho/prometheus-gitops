@@ -13,9 +13,10 @@ O `MonitoringStack` coleta apenas recursos que atendem aos dois critérios:
 - namespace com label `observability=enabled`;
 - `ServiceMonitor`, `PodMonitor`, `PrometheusRule`, `Probe` ou `ScrapeConfig` com label `observability=platform`.
 
-Essa regra evita duplicidade acidental com o `UserWorkloadMonitoring`. Se uma
-aplicação precisar migrar para o Prometheus dedicado, rotule o namespace e o
-recurso de scrape explicitamente.
+Essa regra evita duplicidade acidental com o `UserWorkloadMonitoring`. No CRC,
+a recomendação é deixar o UWM nativo desativado e coletar workloads por este
+stack dedicado. Se uma aplicação precisar entrar no Prometheus Apps, rotule o
+namespace e o recurso de scrape explicitamente.
 
 ## Validação
 

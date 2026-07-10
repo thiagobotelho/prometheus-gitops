@@ -18,8 +18,8 @@ flowchart LR
 
 O desenho mantém dois papéis claros:
 
-- OpenShift Monitoring/User Workload Monitoring continua responsável pela
-  plataforma, operadores e compatibilidade nativa do OpenShift;
+- OpenShift Monitoring continua responsável pela plataforma, operadores e
+  compatibilidade nativa do OpenShift;
 - `prometheus-apps` coleta workloads selecionados que precisam de customização,
   exemplares e correlação com Tempo.
 
@@ -28,13 +28,14 @@ O desenho mantém dois papéis claros:
 | Alternativa | Vantagem | Risco |
 |---|---|---|
 | Manter apenas User Workload Monitoring | menor número de componentes | não atende customizações/exemplares necessárias no CRC atual |
-| Remover User Workload Monitoring | reduz duplicidade | perde integração suportada do OpenShift e aumenta risco operacional |
+| Desativar User Workload Monitoring e usar este stack | reduz duplicidade e consumo no CRC | exige padronizar labels `observability=*` |
 | Usar Prometheus dedicado para tudo | máxima customização | replica responsabilidades da plataforma e exige mais manutenção |
-| Modelo híbrido recomendado | separa plataforma e aplicações customizadas | exige labels e documentação para evitar coleta duplicada |
+| Modelo recomendado | OpenShift Monitoring para plataforma + Prometheus Apps para workloads | exige labels e documentação para evitar coleta duplicada |
 
-Recomendação: manter o monitoramento nativo do OpenShift para plataforma e usar
-este Prometheus dedicado para aplicações que exigem exemplares, métricas RED,
-Service Graph e integrações avançadas no Grafana.
+Recomendação para CRC: manter o monitoramento nativo do OpenShift para
+plataforma, deixar User Workload Monitoring desativado por padrão e usar este
+Prometheus dedicado para aplicações que exigem exemplares, métricas RED, Service
+Graph e integrações avançadas no Grafana.
 
 ## Seletores
 
