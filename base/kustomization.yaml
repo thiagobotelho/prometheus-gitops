@@ -10,3 +10,4 @@ resources:
   - prometheusrule.yaml
   - networkpolicy.yaml
   - prometheus-exemplars.yaml
+  - zabbix-query-proxy.yaml
