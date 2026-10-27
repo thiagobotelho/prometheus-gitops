@@ -144,3 +144,9 @@ datasource do `grafana-gitops`.
 - [Red Hat OpenShift Cluster Observability Operator](https://docs.redhat.com/en/documentation/red_hat_openshift_cluster_observability_operator/1-latest/html/about_red_hat_openshift_cluster_observability_operator/index)
 - [Configurar COO para monitorar serviços](https://docs.redhat.com/en/documentation/red_hat_openshift_cluster_observability_operator/1-latest/html/installing_red_hat_openshift_cluster_observability_operator/configuring-the-cluster-observability-operator-to-monitor-a-service)
 - [Prometheus exemplar storage](https://prometheus.io/docs/prometheus/latest/feature_flags/)
+
+## Coleta opcional de Istio e Envoy
+
+O laboratório [service-mesh-gitops](https://github.com/thiagobotelho/service-mesh-gitops) reutiliza apps-monitoring. Seus monitores devem usar **monitoring.rhobs/v1**, label `observability=platform`, em namespaces `observability=enabled`. Há também CRDs de monitoring.coreos.com no cluster; criar um monitor nesse outro grupo não comprova coleta pelo Prometheus do COO.
+
+PodMonitor de Envoy: porta nomeada http-envoy-prom, caminho /stats/prometheus, container istio-proxy. ServiceMonitor de Istiod: http-monitoring, /metrics. Validar os nomes nos pods/Services da revisão real. O cenário combinado libera scrape na porta 15090 sem abrir a aplicação 8080. Não criar outro Prometheus nem ampliar seletores globalmente. A coleta real das séries Istio segue pendente da instalação autorizada.
