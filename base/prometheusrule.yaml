@@ -2,6 +2,7 @@ apiVersion: monitoring.rhobs/v1
 kind: PrometheusRule
 metadata:
   name: apps-monitoring-platform
+  # Namespace deste objeto; não confundir com seleção de namespaces de origem.
   namespace: observability-apps
   labels:
     observability: platform

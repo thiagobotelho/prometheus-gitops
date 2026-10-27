@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: zabbix-query-proxy
+  # Namespace deste objeto; não confundir com seleção de namespaces de origem.
   namespace: observability-apps
   annotations:
     argocd.argoproj.io/sync-wave: "4"
@@ -12,10 +13,12 @@ metadata:
   name: zabbix-query-proxy-auth-delegator
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+# Referência de permissão; este vínculo não cria identidades no provedor.
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: system:auth-delegator
+# Identidades que recebem as permissões declaradas pelo papel referenciado.
 subjects:
   - kind: ServiceAccount
     name: zabbix-query-proxy
@@ -31,6 +34,7 @@ metadata:
 rules:
   - apiGroups:
       - ""
+    # Recursos ou dependências desta seção; avaliar seu escopo antes de alterar.
     resources:
       - services/proxy
     resourceNames:
@@ -79,7 +83,9 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
+  # Número de instâncias; réplicas isoladamente não garantem alta disponibilidade.
   replicas: 1
+  # Seletores precisam corresponder aos labels dos recursos de destino.
   selector:
     matchLabels:
       app.kubernetes.io/name: zabbix-query-proxy
@@ -103,6 +109,7 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          # Prontidão controla recebimento de tráfego, sem provar integrações externas.
           readinessProbe:
             tcpSocket:
               port: http
@@ -110,6 +117,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 6
+          # Falha desta sonda pode reiniciar o container; evite depender de serviços externos.
           livenessProbe:
             tcpSocket:
               port: http
@@ -124,6 +132,7 @@ spec:
             limits:
               cpu: 100m
               memory: 128Mi
+          # Restringe privilégios do processo; conferir compatibilidade com a SCC.
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -172,6 +181,7 @@ spec:
     weight: 100
   port:
     targetPort: http
+  # TLS define transporte e confiança; não desabilitar validação para contornar erros.
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect

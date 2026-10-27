@@ -147,3 +147,7 @@ O laboratório [service-mesh-gitops](https://github.com/thiagobotelho/service-me
 
 PodMonitor de Envoy: porta nomeada http-envoy-prom, caminho /stats/prometheus, container istio-proxy. ServiceMonitor de Istiod: http-monitoring, /metrics. Validar os nomes nos pods/Services da revisão real. O cenário combinado libera scrape na porta 15090 sem abrir a aplicação 8080. Não criar outro Prometheus nem ampliar seletores globalmente. Após instalar o Mesh, confira targets e séries antes de usar os painéis.
 
+
+## Aprender a configuração
+
+Consulte o [guia comentado](docs/APRENDIZADO.md) para entender componentes, escolhas, testes positivos/negativos e reversão.
