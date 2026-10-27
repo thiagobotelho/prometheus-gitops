@@ -27,7 +27,7 @@ O desenho mantém dois papéis claros:
 
 | Alternativa | Vantagem | Risco |
 |---|---|---|
-| Manter apenas User Workload Monitoring | menor número de componentes | não atende customizações/exemplares necessárias no CRC atual |
+| Manter apenas User Workload Monitoring | menor número de componentes | requer conferir suporte às customizações e aos exemplares desejados |
 | Desativar User Workload Monitoring e usar este stack | reduz duplicidade e consumo no CRC | exige padronizar labels `observability=*` |
 | Usar Prometheus dedicado para tudo | máxima customização | replica responsabilidades da plataforma e exige mais manutenção |
 | Modelo recomendado | OpenShift Monitoring para plataforma + Prometheus Apps para workloads | exige labels e documentação para evitar coleta duplicada |
@@ -77,11 +77,7 @@ curl -fsS 'http://127.0.0.1:9090/api/v1/query?query=up'
 
 ## Exemplares
 
-No CRC atual, o Prometheus gerado pelo `MonitoringStack` sobe com
-`--enable-feature=exemplar-storage`, permitindo armazenar exemplares
-OpenMetrics com `trace_id` e `span_id`. Essa configuração deve ser validada no
-runtime, porque o campo não aparece diretamente no manifesto `MonitoringStack`
-versionado neste repositório.
+Para armazenar exemplares OpenMetrics com `trace_id` e `span_id`, confira se o Prometheus gerado pelo MonitoringStack habilita exemplar-storage. Consulte os flags no runtime; não deduza essa configuração apenas do manifesto MonitoringStack.
 
 Valide a flag:
 
@@ -149,4 +145,5 @@ datasource do `grafana-gitops`.
 
 O laboratório [service-mesh-gitops](https://github.com/thiagobotelho/service-mesh-gitops) reutiliza apps-monitoring. Seus monitores devem usar **monitoring.rhobs/v1**, label `observability=platform`, em namespaces `observability=enabled`. Há também CRDs de monitoring.coreos.com no cluster; criar um monitor nesse outro grupo não comprova coleta pelo Prometheus do COO.
 
-PodMonitor de Envoy: porta nomeada http-envoy-prom, caminho /stats/prometheus, container istio-proxy. ServiceMonitor de Istiod: http-monitoring, /metrics. Validar os nomes nos pods/Services da revisão real. O cenário combinado libera scrape na porta 15090 sem abrir a aplicação 8080. Não criar outro Prometheus nem ampliar seletores globalmente. A coleta real das séries Istio segue pendente da instalação autorizada.
+PodMonitor de Envoy: porta nomeada http-envoy-prom, caminho /stats/prometheus, container istio-proxy. ServiceMonitor de Istiod: http-monitoring, /metrics. Validar os nomes nos pods/Services da revisão real. O cenário combinado libera scrape na porta 15090 sem abrir a aplicação 8080. Não criar outro Prometheus nem ampliar seletores globalmente. Após instalar o Mesh, confira targets e séries antes de usar os painéis.
+
