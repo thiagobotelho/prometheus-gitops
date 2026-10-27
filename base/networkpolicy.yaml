@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-grafana-to-prometheus-apps
+  # Namespace deste objeto; não confundir com seleção de namespaces de origem.
   namespace: observability-apps
   annotations:
     argocd.argoproj.io/sync-wave: "4"

@@ -2,23 +2,29 @@ apiVersion: monitoring.rhobs/v1alpha1
 kind: MonitoringStack
 metadata:
   name: apps-monitoring
+  # Namespace deste objeto; não confundir com seleção de namespaces de origem.
   namespace: observability-apps
   annotations:
     argocd.argoproj.io/sync-wave: "3"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   logLevel: info
+  # Janela de retenção deve ser compatível com a capacidade e política de dados.
   retention: 15d
   createClusterRoleBindings: CreateClusterRoleBindings
+  # Seleciona namespaces; conferir labels antes de ampliar o alcance.
   namespaceSelector:
     matchLabels:
       observability: enabled
+  # Seleciona monitores por labels; não seleciona pods diretamente.
   resourceSelector:
     matchLabels:
       observability: platform
   prometheusConfig:
+    # Número de instâncias; réplicas isoladamente não garantem alta disponibilidade.
     replicas: 1
     scrapeInterval: 30s
+    # Dados persistentes exigem capacidade, classe de armazenamento e backup.
     persistentVolumeClaim:
       resources:
         requests:
@@ -35,6 +41,7 @@ spec:
     matcherStrategy:
       type: None
     replicas: 1
+    # Recursos ou dependências desta seção; avaliar seu escopo antes de alterar.
     resources:
       requests:
         cpu: 50m
