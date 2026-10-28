@@ -1,16 +1,8 @@
 # Seleção de alvos e alertas
 
-## O que observar
 
 namespaceSelector seleciona namespaces rotulados; resourceSelector seleciona monitores. Ambos precisam corresponder aos recursos. Retenção e armazenamento definem a janela observável. O Alertmanager deste MonitoringStack está desabilitado: definir PrometheusRule não entrega notificações por si só. Configure uma rota de alertas explicitamente antes de depender dela.
 
-## Roteiro de leitura e validação
+## Regras dos componentes
 
-1. Leia o README e identifique o componente que recebe a configuração.
-2. Confira namespaces, seletores, portas, identidades e dependências nos exemplos.
-3. Ajuste apenas os campos necessários em um ambiente isolado; não use credenciais de produção.
-4. Valide sintaxe e contratos locais antes de aplicar. Registre o resultado real separado deste guia.
-5. Execute um caso permitido e um caso negado, conferindo a causa da resposta.
-6. Defina reversão por recurso/arquivo e preserve dados persistentes antes de mudanças.
-
-Os comentários dos manifests explicam escolhas; não comprovam disponibilidade do componente. Exemplos fora de entradas Kustomize não são implantados automaticamente.
+Mantenha regras e monitores específicos junto ao componente que os produz. As regras do mesh são entregues pelo perfil opcional de service-mesh-gitops e selecionadas pelas labels da MonitoringStack. Verifique alvos, regras carregadas e estado pending/firing no Prometheus Apps antes de investigar notificações.

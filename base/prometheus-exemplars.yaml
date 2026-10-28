@@ -2,7 +2,6 @@ apiVersion: monitoring.rhobs/v1
 kind: Prometheus
 metadata:
   name: apps-monitoring
-  # Namespace deste objeto; não confundir com seleção de namespaces de origem.
   namespace: observability-apps
   annotations:
     argocd.argoproj.io/sync-options: ServerSideApply=true,Validate=false
